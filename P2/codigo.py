@@ -17,7 +17,7 @@ def prep_image(raw_img):
     modified_img = modified_img.reshape(modified_img.shape[0]*modified_img.shape[1], 3)
     return modified_img
 
-def color_analysis(img):
+def color_analysis(img,carpeta,num):
     clf = KMeans(n_clusters = 5)
     color_labels = clf.fit_predict(img)
     center_colors = clf.cluster_centers_
@@ -26,7 +26,7 @@ def color_analysis(img):
     hex_colors = [rgb_to_hex(ordered_colors[i]) for i in counts.keys()]
     plt.figure(figsize = (12, 8))
     plt.bar(hex_colors,counts.values(), color = hex_colors, label= 'colores')
-    plt.savefig("color_analysis_bar.png")
+    plt.savefig(os.getcwd()+'\I_'+carpeta+"\Histograma\Histograma_imagen"+str(num)+".png")
     plt.show()
     print("Colores: ")
     print(hex_colors)
@@ -36,19 +36,19 @@ def entrenamiento():
 	print("Desplegando imagenes de la base de conocimiento llamado aerea:")
 	for i in n:
 		try:
-			image = Image.open(os.getcwd()+"\i_aerea\Entrenamiento"+str(i)+".png") 
+			image = Image.open(os.getcwd()+"\I_aerea\Entrenamiento"+str(i)+".png") 
 		except:
-			print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+"\i_aerea\Entrenamiento"+str(i)+".png")
+			print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+"\I_aerea\Entrenamiento"+str(i)+".png")
 			return
 		image = image.filter(ImageFilter.GaussianBlur)   
 		image.show()
 		rgb_im = image.convert('RGB')
-		rgb_im.save(os.getcwd()+"\i_aerea\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg" ,"JPEG")
+		rgb_im.save(os.getcwd()+"\I_aerea\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg" ,"JPEG")
 
-		imagecv2 = cv2.imread(os.getcwd()+"\i_aerea\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg")
+		imagecv2 = cv2.imread(os.getcwd()+"\I_aerea\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg")
 		imagecv2 = cv2.cvtColor(imagecv2 , cv2.COLOR_BGR2RGB)
 		modified_image = prep_image(imagecv2)
-		color_analysis(modified_image)
+		color_analysis(modified_image,"aerea",i)
 		aerea_colores.append(hex_colors)
 		
 
@@ -57,19 +57,19 @@ def entrenamiento():
 	print("Desplegando imagenes de la base de conocimiento llamado comida:")
 	for i in n:
 		try:
-			image = Image.open(os.getcwd()+"\comida\Entrenamiento"+str(i)+".jpg") 
+			image = Image.open(os.getcwd()+"\I_comida\Entrenamiento"+str(i)+".jpg") 
 		except:
-			print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+"\comida\Entrenamiento"+str(i)+".jpg")
+			print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+"\I_comida\Entrenamiento"+str(i)+".jpg")
 			return
 		image = image.filter(ImageFilter.GaussianBlur)   
 		image.show()
 		rgb_im = image.convert('RGB')
-		rgb_im.save(os.getcwd()+"\comida\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg" ,"JPEG")
+		rgb_im.save(os.getcwd()+"\I_comida\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg" ,"JPEG")
 
-		imagecv2 = cv2.imread(os.getcwd()+"\comida\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg")
+		imagecv2 = cv2.imread(os.getcwd()+"\I_comida\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg")
 		imagecv2 = cv2.cvtColor(imagecv2 , cv2.COLOR_BGR2RGB)
 		modified_image = prep_image(imagecv2)
-		color_analysis(modified_image)
+		color_analysis(modified_image,"comida",i)
 		comida_colores.append(hex_colors)
 		
 
@@ -77,25 +77,38 @@ def entrenamiento():
 	print("Desplegando imagenes de la base de conocimiento llamado monos:")
 	for i in n:
 		try:
-			image = Image.open(os.getcwd()+"\monos\Entrenamiento"+str(i)+".jpg") 
+			image = Image.open(os.getcwd()+"\I_monos\Entrenamiento"+str(i)+".jpg") 
 		except:
-			print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+"\monos\Entrenamiento"+str(i)+".jpg")
+			print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+"\I_monos\Entrenamiento"+str(i)+".jpg")
 			return
 		image = image.filter(ImageFilter.GaussianBlur)   
 		image.show()
 		rgb_im = image.convert('RGB')
-		rgb_im.save(os.getcwd()+"\monos\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg" ,"JPEG")
+		rgb_im.save(os.getcwd()+"\I_monos\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg" ,"JPEG")
 
-		imagecv2 = cv2.imread(os.getcwd()+"\monos\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg")
+		imagecv2 = cv2.imread(os.getcwd()+"\I_monos\Filtradas\Imagen_filtro_gaussiano"+str(i)+".jpg")
 		imagecv2 = cv2.cvtColor(imagecv2 , cv2.COLOR_BGR2RGB)
 		modified_image = prep_image(imagecv2)
-		color_analysis(modified_image)
+		color_analysis(modified_image,"monos",i)
 		mono_colores.append(hex_colors)
-	
+
+
+def Prueba():
+	#Aquí se va a ir comparando con los colores frecuentes que se extrajeron de las imagenes de conocimiento
+	#Carpeta para guardar las imagenes con los colores comunes de los arreglos
+	print("Ponga la dirección de la imagen prueba con su extensión (ya está siendo considerada la dirección actual):")
+	dir=input()
+	try:
+		image = Image.open(os.getcwd()+dir) 
+	except:
+		print("Hubo un error en el archivo cuya ruta es: "+os.getcwd()+dir)
+		return
+	image.show()
 
 
 def main():
 	entrenamiento()
+	Prueba()
 
 #variables globales
 hex_colors =[]
