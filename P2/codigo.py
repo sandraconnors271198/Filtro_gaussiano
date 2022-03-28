@@ -212,7 +212,7 @@ def Prueba():
 	unos_comida=np.sum(mask == 255)
 
 	print("Máscara negro")
-	negroBajo = np.array([17, 17, 16])
+	negroBajo = np.array([0, 0, 0])
 	negroAlto = np.array([35, 44, 50])
 	mask = cv2.inRange(img, negroBajo, negroAlto)
 	image = cv2.add(img, np.zeros(np.shape(img), dtype=np.uint8), mask=mask)
